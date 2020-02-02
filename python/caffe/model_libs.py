@@ -13,17 +13,17 @@ def make_if_not_exist(path):
         os.makedirs(path)
 
 def UnpackVariable(var, num):
-  assert len > 0
+#  assert len > 0
   if type(var) is list and len(var) == num:
     return var
   else:
     ret = []
     if type(var) is list:
       assert len(var) == 1
-      for i in xrange(0, num):
+      for i in range(0, num):
         ret.append(var[0])
     else:
-      for i in xrange(0, num):
+      for i in range(0, num):
         ret.append(var)
     return ret
 
@@ -153,7 +153,7 @@ def ResBody(net, from_layer, block_name, out2a, out2b, out2c, stride, use_branch
         bn_prefix=bn_prefix, bn_postfix=bn_postfix,
         scale_prefix=scale_prefix, scale_postfix=scale_postfix, **bn_param)
   else:
-    pad = int((3 + (dilation - 1) * 2) - 1) / 2
+    pad = int((3 + (dilation - 1) * 2) - 1) // 2
     ConvBNLayer(net, out_name, branch_name, use_bn=True, use_relu=True,
         num_output=out2b, kernel_size=3, pad=pad, stride=1, use_scale=use_scale,
         dilation=dilation, conv_prefix=conv_prefix, conv_postfix=conv_postfix,
@@ -372,7 +372,7 @@ def VGGNetBody(net, from_layer, need_fc=True, fully_conv=False, reduced=False,
             dilation = 1
 
     kernel_size = 3
-    pad = int((kernel_size + (dilation - 1) * (kernel_size - 1)) - 1) / 2
+    pad = int((kernel_size + (dilation - 1) * (kernel_size - 1)) - 1) // 2
     net.conv5_1 = L.Convolution(net[name], num_output=512, pad=pad, kernel_size=kernel_size, dilation=dilation, **kwargs)
     net.relu5_1 = L.ReLU(net.conv5_1, in_place=True)
     net.conv5_2 = L.Convolution(net.relu5_1, num_output=512, pad=pad, kernel_size=kernel_size, dilation=dilation, **kwargs)
@@ -414,7 +414,7 @@ def VGGNetBody(net, from_layer, need_fc=True, fully_conv=False, reduced=False,
                 else:
                     kernel_size = 7
                     num_output = 4096
-            pad = int((kernel_size + (dilation - 1) * (kernel_size - 1)) - 1) / 2
+            pad = int((kernel_size + (dilation - 1) * (kernel_size - 1)) - 1) // 2
             net.fc6 = L.Convolution(net[name], num_output=num_output, pad=pad, kernel_size=kernel_size, dilation=dilation, **kwargs)
 
             net.relu6 = L.ReLU(net.fc6, in_place=True)

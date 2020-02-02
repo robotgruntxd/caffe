@@ -1,7 +1,4 @@
 from __future__ import print_function
-import caffe
-from caffe.model_libs import *
-from google.protobuf import text_format
 
 import math
 import os
@@ -9,7 +6,10 @@ import shutil
 import stat
 import subprocess
 import sys
-
+sys.path.insert(0, '/home/player/caffe/python')
+import caffe
+from caffe.model_libs import *
+from google.protobuf import text_format
 # Add extra layers on top of a "base" network (e.g. VGGNet or Inception).
 def AddExtraLayers(net, use_batchnorm=True, lr_mult=1):
     use_relu = True
@@ -310,7 +310,7 @@ max_ratio = 90
 step = int(math.floor((max_ratio - min_ratio) / (len(mbox_source_layers) - 2)))
 min_sizes = []
 max_sizes = []
-for ratio in xrange(min_ratio, max_ratio + 1, step):
+for ratio in range(min_ratio, max_ratio + 1, step):
   min_sizes.append(min_dim * ratio / 100.)
   max_sizes.append(min_dim * (ratio + step) / 100.)
 min_sizes = [min_dim * 10 / 100.] + min_sizes
@@ -329,12 +329,15 @@ clip = False
 
 # Solver parameters.
 # Defining which GPUs to use.
-gpus = "0,1,2,3"
+#gpus = "0,1,2,3"
+gpus = "0"
 gpulist = gpus.split(",")
-num_gpus = len(gpulist)
+#num_gpus = len(gpulist)
+num_gpus = 1
 
 # Divide the mini-batch to different GPUs.
-batch_size = 32
+#batch_size = 32
+batch_size = 16
 accum_batch_size = 32
 iter_size = accum_batch_size / batch_size
 solver_mode = P.Solver.CPU
@@ -362,6 +365,7 @@ test_batch_size = 8
 # otherwise mAP will be slightly off the true value.
 test_iter = int(math.ceil(float(num_test_image) / test_batch_size))
 
+#   'max_iter': 120000,
 solver_param = {
     # Train parameters
     'base_lr': base_lr,
@@ -371,7 +375,7 @@ solver_param = {
     'gamma': 0.1,
     'momentum': 0.9,
     'iter_size': iter_size,
-    'max_iter': 120000,
+    'max_iter': 40,
     'snapshot': 80000,
     'display': 10,
     'average_loss': 10,
@@ -525,6 +529,7 @@ with open(solver_file, 'w') as f:
 shutil.copy(solver_file, job_dir)
 
 max_iter = 0
+#max_iter = 50
 # Find most recent snapshot.
 for file in os.listdir(snapshot_dir):
   if file.endswith(".solverstate"):
