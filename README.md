@@ -78,6 +78,10 @@ Please cite SSD in your publications if it helps your research:
   sudo tar -xvf VOCtrainval_11-May-2012.tar
   sudo tar -xvf VOCtrainval_06-Nov-2007.tar
   sudo tar -xvf VOCtest_06-Nov-2007.tar
+  ImageSets > Main : Contains Name of the file images e.g. image001.jpg
+  JPEGImages : Contains the images 
+  Annotations : Contains label of images and the bond box 
+  
   ```
 
 3. Create the LMDB file.
